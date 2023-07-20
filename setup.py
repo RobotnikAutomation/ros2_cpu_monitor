@@ -13,14 +13,17 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='colin',
-    maintainer_email='colin.fuelberth@icloud.com',
-    description='TODO: Package description',
+    # maintainer='colin',
+    # maintainer_email='colin.fuelberth@icloud.com',
+    maintainer='Guillem Gari',
+    maintainer_email='guillem.gari@robotnik.es',
+
+    description='CPU monitor',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'temperature_tracker = temperature_tracker.temperature_tracker:main'
+            'cpu_monitor = cpu_monitor.cpu_monitor:main'
         ],
     },
 )

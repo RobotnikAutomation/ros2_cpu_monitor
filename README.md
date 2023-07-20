@@ -1,13 +1,7 @@
 # ros2_temperature_tracker
-ROS 2 Package to monitor and publish CPU and GPU temperatures
+ROS 2 Package to monitor and publish CPU
 
 ## Parameters
-### publish_gpu_temperature
-Enables GPU temperature publishing. 
-
->Note: Only enable if using an Nvidia GPU. Other GPUs are not supported.
->> If you have an nvidia GPU and it is not being detected by the node, try using 'nvidia-smi' in a terminal. 
-
 
 ### publish_cpu_temperature
 Enables CPU temperature publishing.
