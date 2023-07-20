@@ -29,7 +29,6 @@ class CPUMonitor(Node):
         # ).get_parameter_value().double_value
 
 
-
     def init_publishers(self):
         self.cpu_temp_output_topic = "cpu_temperature"
         self.cpu_load_output_topic = "cpu_load"
@@ -83,7 +82,7 @@ class CPUMonitor(Node):
         self.get_cpu_temperature()
         self.get_cpu_load()
         self.cpu_temp_publisher.publish(self.cpu_temp_msg)
-        self.cpu_load_publisher.publish(self.cpu_load)
+        self.cpu_load_publisher.publish(self.cpu_load_msg)
 
 
 def main(
