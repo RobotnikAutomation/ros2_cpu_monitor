@@ -38,10 +38,9 @@ class CPUMonitor(Node):
         )
 
     def init_vars(self):
-        if self.publish_cpu_temperature:
-            self.cpu_temp_msg = Temperature()
-            self.cpu_temp_msg.header.frame_id = "CPU"
-            self.cpu_zone = self.find_cpu_zone()
+        self.cpu_temp_msg = Temperature()
+        self.cpu_temp_msg.header.frame_id = "CPU"
+        self.cpu_zone = self.find_cpu_zone()
 
     def find_cpu_zone(self):
         i = 0
