@@ -17,7 +17,7 @@ class CPUMonitor(Node):
         self.timer = self.create_timer(1, self.publish_temperatures)
 
     def init_parameters(self):
-        self.publish_cpu_temperature = self.get_parameter(
+        self.publish_cpu_temperature = self.get_parameter_or(
             "publish_cpu_temperature",
             True
         ).get_parameter_value().bool_value
@@ -36,7 +36,7 @@ class CPUMonitor(Node):
                 "cpu_output_topic",
                 "cpu_temperature"
             ).get_parameter_value().string_value
-            self.cpu_publisher = self.create_publisher_or(
+            self.cpu_publisher = self.create_publisher(
                 Temperature,
                 self.cpu_output_topic,
                 10
