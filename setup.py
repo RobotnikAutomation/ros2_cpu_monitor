@@ -17,7 +17,11 @@ setup(
     # maintainer_email='colin.fuelberth@icloud.com',
     maintainer='Guillem Gari',
     maintainer_email='guillem.gari@robotnik.es',
-
+    parameters=[
+        {'publish_cpu_temperature': True},
+        {'cpu_type_id': 'x86_pkg_temp'},
+        {'publish_rate': 1}
+    ],
     description='CPU monitor',
     license='TODO: License declaration',
     tests_require=['pytest'],
