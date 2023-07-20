@@ -4,6 +4,7 @@ from sensor_msgs.msg import Temperature
 from std_msgs.msg import String
 from os.path import exists
 import psutil
+from ping3 import ping
 
 
 class CPUMonitor(Node):
@@ -24,14 +25,15 @@ class CPUMonitor(Node):
         #     "cpu_type_id"
         # ).get_parameter_value().string_value
         self.publish_rate = 1.0
+        self.edge_ip = '10.10.10.212'
         # self.publish_rate = self.get_parameter(
         #     "publish_rate",
         # ).get_parameter_value().double_value
 
-
     def init_publishers(self):
         self.cpu_temp_output_topic = "cpu_temperature"
         self.cpu_load_output_topic = "cpu_load"
+        self.cpu_edge_latency_topic = "edge_latency"
         # self.cpu_temp_output_topic = self.get_parameter(
         #     "cpu_temp_output_topic"
         # ).get_parameter_value().string_value
@@ -45,10 +47,16 @@ class CPUMonitor(Node):
             self.cpu_load_output_topic,
             10
         )
+        self.edge_latency_publisher = self.create_publisher(
+            String,
+            self.cpu_edge_latency_topic,
+            10
+        )
 
     def init_vars(self):
         self.cpu_temp_msg = Temperature()
         self.cpu_load_msg = String()
+        self.edge_latency_msg = String()
         self.cpu_temp_msg.header.frame_id = "CPU"
         self.cpu_zone = self.find_cpu_zone()
 
@@ -78,11 +86,17 @@ class CPUMonitor(Node):
         cpu_load = psutil.cpu_percent(interval=0.5, percpu=True)
         self.cpu_load_msg.data = str(cpu_load)
 
+    def get_edge_latency(self):
+        edge_latency = ping(self.edge_ip, unit='ms', timeout=0.800)
+        self.edge_latency_msg.data = str(edge_latency)
+
     def publish_cpu_stats(self):
         self.get_cpu_temperature()
         self.get_cpu_load()
+        self.get_edge_latency()
         self.cpu_temp_publisher.publish(self.cpu_temp_msg)
         self.cpu_load_publisher.publish(self.cpu_load_msg)
+        self.edge_latency_publisher.publish(self.edge_latency_msg)
 
 
 def main(
