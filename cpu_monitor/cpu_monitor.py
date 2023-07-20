@@ -21,22 +21,22 @@ class CPUMonitor(Node):
             "publish_cpu_temperature",
             True
         ).get_parameter_value().bool_value
-        self.cpu_id = self.get_parameter(
+        self.cpu_id = self.get_parameter_or(
             "cpu_type_id",
             "x86_pkg_temp"
         ).get_parameter_value().string_value
-        self.publish_rate = self.get_parameter(
+        self.publish_rate = self.get_parameter_or(
             "publish_rate",
             "1"
         ).get_parameter_value().double_value
 
     def init_publishers(self):
         if self.publish_cpu_temperature:
-            self.cpu_output_topic = self.get_parameter(
+            self.cpu_output_topic = self.get_parameter_or(
                 "cpu_output_topic",
                 "cpu_temperature"
             ).get_parameter_value().string_value
-            self.cpu_publisher = self.create_publisher(
+            self.cpu_publisher = self.create_publisher_or(
                 Temperature,
                 self.cpu_output_topic,
                 10
