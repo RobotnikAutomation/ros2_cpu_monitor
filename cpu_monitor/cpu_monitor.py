@@ -27,16 +27,15 @@ class CPUMonitor(Node):
         ).get_parameter_value().double_value
 
     def init_publishers(self):
-        if self.publish_cpu_temperature:
-            self.cpu_output_topic = "cpu_temperature"
-            self.cpu_output_topic = self.get_parameter(
-                "cpu_output_topic",
-            ).get_parameter_value().string_value
-            self.cpu_publisher = self.create_publisher(
-                Temperature,
-                self.cpu_output_topic,
-                10
-            )
+        self.cpu_output_topic = "cpu_temperature"
+        self.cpu_output_topic = self.get_parameter(
+            "cpu_output_topic"
+        ).get_parameter_value().string_value
+        self.cpu_publisher = self.create_publisher(
+            Temperature,
+            self.cpu_output_topic,
+            10
+        )
 
     def init_vars(self):
         if self.publish_cpu_temperature:
