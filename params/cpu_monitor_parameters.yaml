@@ -1,6 +1,5 @@
 cpu_monitor:
   ros__parameters:
-    publish_cpu_temperature: True
     cpu_type_id: "x86_pkg_temp" #dependent on CPU architecture, see readme
     cpu_output_topic: "cpu_temperature"
     publish_rate: 1   #publish rate in seconds

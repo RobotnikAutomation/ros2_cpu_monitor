@@ -17,10 +17,6 @@ class CPUMonitor(Node):
         self.timer = self.create_timer(1, self.publish_temperatures)
 
     def init_parameters(self):
-        self.publish_cpu_temperature = self.get_parameter_or(
-            "publish_cpu_temperature",
-            True
-        ).get_parameter_value().bool_value
         self.cpu_id = self.get_parameter_or(
             "cpu_type_id",
             "x86_pkg_temp"
@@ -40,10 +36,6 @@ class CPUMonitor(Node):
                 Temperature,
                 self.cpu_output_topic,
                 10
-            )
-        if not self.publish_cpu_temperature:
-            self.get_logger().warning(
-                "Not publishing CPU. Is this intentional?"
             )
 
     def init_vars(self):
@@ -78,12 +70,8 @@ class CPUMonitor(Node):
         self.gpu_temp_msg.temperature = self.gpu.temperature
 
     def publish_temperatures(self):
-        if self.publish_cpu_temperature:
-            self.get_cpu_temperature()
-            self.cpu_publisher.publish(self.cpu_temp_msg)
-        if self.publish_gpu_temperature:
-            self.get_gpu_temperature()
-            self.gpu_publisher.publish(self.gpu_temp_msg)
+        self.get_cpu_temperature()
+        self.cpu_publisher.publish(self.cpu_temp_msg)
 
 
 def main(
