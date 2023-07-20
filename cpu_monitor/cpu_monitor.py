@@ -18,19 +18,19 @@ class CPUMonitor(Node):
 
     def init_parameters(self):
         self.cpu_id = "x86_pkg_temp"
-        self.cpu_id = self.get_parameter(
-            "cpu_type_id",
-        ).get_parameter_value().string_value
-        self.publish_rate = 1
-        self.publish_rate = self.get_parameter(
-            "publish_rate",
-        ).get_parameter_value().double_value
+        # self.cpu_id = self.get_parameter(
+        #     "cpu_type_id"
+        # ).get_parameter_value().string_value
+        self.publish_rate = 1.0
+        # self.publish_rate = self.get_parameter(
+        #     "publish_rate",
+        # ).get_parameter_value().double_value
 
     def init_publishers(self):
         self.cpu_output_topic = "cpu_temperature"
-        self.cpu_output_topic = self.get_parameter(
-            "cpu_output_topic"
-        ).get_parameter_value().string_value
+        # self.cpu_output_topic = self.get_parameter(
+        #     "cpu_output_topic"
+        # ).get_parameter_value().string_value
         self.cpu_publisher = self.create_publisher(
             Temperature,
             self.cpu_output_topic,
