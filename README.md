@@ -15,11 +15,6 @@ The string value found in /sys/class/thermal/thermal_zone*/type
 >Note: Usually "x86_pkg_temp" represents the CPU. This may be different depending on CPU architecture.
 
 
-### gpu_output_topic
-
-The string value representing the desired output topic name for the GPU temperature to be published on
-
-
 ### cpu_output_topic
 
 The string value representing the desired output topic name for the CPU temperature to be published on
