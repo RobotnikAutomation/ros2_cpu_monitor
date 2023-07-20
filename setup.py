@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'temperature_tracker'
+package_name = 'cpu_monitor'
 
 setup(
     name=package_name,
