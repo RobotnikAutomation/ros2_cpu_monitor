@@ -76,7 +76,7 @@ class CPUMonitor(Node):
 
     def get_cpu_load(self):
         cpu_load = psutil.cpu_percent(interval=0.5)
-        self.cpu_load.string = str(cpu_load)
+        self.cpu_load_msg.string = str(cpu_load)
 
     def publish_cpu_stats(self):
         self.get_cpu_temperature()
