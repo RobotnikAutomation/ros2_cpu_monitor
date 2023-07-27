@@ -113,7 +113,7 @@ class CPUMonitor(Node):
         if results.error:
             self.get_logger().info(results.error)
             pass
-        edge_throughput = results.Mbps
+        edge_throughput = str(results.Mbps)
         self.edge_throughput_msg.data = str(edge_throughput)
 
     def publish_cpu_stats(self):
