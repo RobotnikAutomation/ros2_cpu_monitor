@@ -115,12 +115,13 @@ class CPUMonitor(Node):
             results = self.iperf.run()
         except OSError as bad:
             self.get_logger().info(bad)
-        if results.error:
-            self.get_logger().info(results.error)
-            self.edge_throughput_msg.data = "ERROR"
-        else:
-            edge_throughput = str(results.Mbps)
-            self.edge_throughput_msg.data = str(edge_throughput)
+        finally:
+            if results.error:
+                self.get_logger().info(results.error)
+                self.edge_throughput_msg.data = "ERROR"
+            else:
+                edge_throughput = str(results.Mbps)
+                self.edge_throughput_msg.data = str(edge_throughput)
         self.iperf = None
 
     def publish_cpu_stats(self):
