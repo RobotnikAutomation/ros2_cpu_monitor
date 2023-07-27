@@ -5,6 +5,7 @@ from std_msgs.msg import String
 from os.path import exists
 import psutil
 from ping3 import ping
+import iperf3
 
 
 class CPUMonitor(Node):
@@ -14,10 +15,13 @@ class CPUMonitor(Node):
             allow_undeclared_parameters=True,
             automatically_declare_parameters_from_overrides=True
         )
+        self.iperf = iperf3.Client()
         self.init_parameters()
         self.init_publishers()
         self.init_vars()
+        self.__setup_iperf()
         self.timer = self.create_timer(1, self.publish_cpu_stats)
+
 
     def init_parameters(self):
         self.cpu_id = "x86_pkg_temp"
@@ -26,14 +30,21 @@ class CPUMonitor(Node):
         # ).get_parameter_value().string_value
         self.publish_rate = 1.0
         self.edge_ip = '10.10.10.212'
+        self.iperf_port = 5201
         # self.publish_rate = self.get_parameter(
         #     "publish_rate",
         # ).get_parameter_value().double_value
 
+    def __setup_iperf(self):
+        self.iperf.duration = 1
+        self.iperf.server_hostname = self.edge_ip
+        self.iperf.port = self.iperf_port
+
     def init_publishers(self):
         self.cpu_temp_output_topic = "cpu_temperature"
         self.cpu_load_output_topic = "cpu_load"
-        self.cpu_edge_latency_topic = "edge_latency"
+        self.edge_latency_topic = "edge_latency"
+        self.iperf_mbps_topic = "edge_throughput"
         # self.cpu_temp_output_topic = self.get_parameter(
         #     "cpu_temp_output_topic"
         # ).get_parameter_value().string_value
@@ -49,7 +60,12 @@ class CPUMonitor(Node):
         )
         self.edge_latency_publisher = self.create_publisher(
             String,
-            self.cpu_edge_latency_topic,
+            self.edge_latency_topic,
+            10
+        )
+        self.edge_throughput_publisher = self.create_publisher(
+            String,
+            self.iperf_mbps_topic,
             10
         )
 
@@ -57,6 +73,7 @@ class CPUMonitor(Node):
         self.cpu_temp_msg = Temperature()
         self.cpu_load_msg = String()
         self.edge_latency_msg = String()
+        self.edge_throughput_msg = String()
         self.cpu_temp_msg.header.frame_id = "CPU"
         self.cpu_zone = self.find_cpu_zone()
 
@@ -90,13 +107,19 @@ class CPUMonitor(Node):
         edge_latency = ping(self.edge_ip, unit='ms', timeout=0.800)
         self.edge_latency_msg.data = str(edge_latency)
 
+    def get_edge_thoughput(self):
+        edge_throughput = self.iperf.run()
+        self.edge_throughput_msg.data = str(edge_throughput)
+
     def publish_cpu_stats(self):
         self.get_cpu_temperature()
         self.get_cpu_load()
         self.get_edge_latency()
+        self.get_edge_thoughput()
         self.cpu_temp_publisher.publish(self.cpu_temp_msg)
         self.cpu_load_publisher.publish(self.cpu_load_msg)
         self.edge_latency_publisher.publish(self.edge_latency_msg)
+        self.edge_throughput_publisher.publish(self.edge_throughput_msg)
 
 
 def main(
