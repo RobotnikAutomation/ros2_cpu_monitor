@@ -15,11 +15,11 @@ class CPUMonitor(Node):
             allow_undeclared_parameters=True,
             automatically_declare_parameters_from_overrides=True
         )
-        self.iperf = iperf3.Client()
+        self.iperf = None
         self.init_parameters()
         self.init_publishers()
         self.init_vars()
-        self.__setup_iperf()
+        # self.__setup_iperf()
         self.timer = self.create_timer(1, self.publish_cpu_stats)
 
 
@@ -109,13 +109,19 @@ class CPUMonitor(Node):
         self.edge_latency_msg.data = str(edge_latency)
 
     def get_edge_thoughput(self):
-        results = self.iperf.run()
+        self.iperf = iperf3.Client()
+        self.__setup_iperf()
+        try:
+            results = self.iperf.run()
+        except OSError as bad:
+            self.get_logger().info(bad)
         if results.error:
             self.get_logger().info(results.error)
             self.edge_throughput_msg.data = "ERROR"
         else:
             edge_throughput = str(results.Mbps)
             self.edge_throughput_msg.data = str(edge_throughput)
+        self.iperf = None
 
     def publish_cpu_stats(self):
         self.get_cpu_temperature()
