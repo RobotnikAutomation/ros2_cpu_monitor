@@ -109,7 +109,11 @@ class CPUMonitor(Node):
         self.edge_latency_msg.data = str(edge_latency)
 
     def get_edge_thoughput(self):
-        edge_throughput = self.iperf.run()
+        results = self.iperf.run()
+        if results.error:
+            self.get_logger().info(results.error)
+            pass
+        edge_throughput = results.Mbps
         self.edge_throughput_msg.data = str(edge_throughput)
 
     def publish_cpu_stats(self):
