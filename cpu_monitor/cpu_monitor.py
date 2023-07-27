@@ -39,6 +39,7 @@ class CPUMonitor(Node):
         self.iperf.duration = 1
         self.iperf.server_hostname = self.edge_ip
         self.iperf.port = self.iperf_port
+        self.iperf.protocol = 'udp'
 
     def init_publishers(self):
         self.cpu_temp_output_topic = "cpu_temperature"
