@@ -40,6 +40,7 @@ class CPUMonitor(Node):
         self.iperf.server_hostname = self.edge_ip
         self.iperf.port = self.iperf_port
         self.iperf.protocol = 'udp'
+        self.iperf.zerocopy = True
 
     def init_publishers(self):
         self.cpu_temp_output_topic = "cpu_temperature"
@@ -120,13 +121,17 @@ class CPUMonitor(Node):
                 self.get_logger().info(results.error)
                 self.edge_throughput_msg.data = "ERROR"
             else:
-                sent_mb_s = str(results.sent_MB_s)
-                recv_mb_s = str(results.received_MB_s)
+                sent_mb_s = str(results.MB_s)
                 lost_per = str(results.lost_percent)
+                server = str(results.remote_host)
                 throughput = ""
-                throughput += f"send: {sent_mb_s}MB/s\n"
-                throughput += f"recv: {recv_mb_s}MB/s\n"
+                throughput += f"thrp: {sent_mb_s}MB/s\n"
                 throughput += f"lost: {lost_per}%\n"
+                throughput += f"pkgs:  {results.packets}\n"
+                throughput += f"srv:  {server}\n"
+                throughput += f"prot: {results.protocol}\n"
+                throughput += f"dur: {results.duration}s\n"
+                throughput += f"jit: {results.jitter_ms}ms\n"
                 self.edge_throughput_msg.data = throughput
         self.iperf = None
 
