@@ -120,9 +120,9 @@ class CPUMonitor(Node):
                 self.get_logger().info(results.error)
                 self.edge_throughput_msg.data = "ERROR"
             else:
-                sent_mb_s = results.sent_MB_s
-                recv_mb_s = results.received_MB_s
-                lost_per = results.lost_percent
+                sent_mb_s = str(results.sent_MB_s)
+                recv_mb_s = str(results.received_MB_s)
+                lost_per = str(results.lost_percent)
                 throughput = ""
                 throughput += f"send: {sent_mb_s}MB/s\n"
                 throughput += f"recv: {recv_mb_s}MB/s\n"
