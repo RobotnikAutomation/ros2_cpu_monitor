@@ -22,7 +22,6 @@ class CPUMonitor(Node):
         # self.__setup_iperf()
         self.timer = self.create_timer(1, self.publish_cpu_stats)
 
-
     def init_parameters(self):
         self.cpu_id = "x86_pkg_temp"
         # self.cpu_id = self.get_parameter(
@@ -103,10 +102,12 @@ class CPUMonitor(Node):
 
     def get_cpu_load(self):
         cpu_load = psutil.cpu_percent(interval=0.5, percpu=True)
+        self.get_logger().info(f"cpu load: {cpu_load}")
         self.cpu_load_msg.data = str(cpu_load)
 
     def get_edge_latency(self):
         edge_latency = ping(self.edge_ip, unit='ms', timeout=0.800)
+        self.get_logger().info(f"edge edge_latency: {edge_latency}")
         self.edge_latency_msg.data = str(edge_latency)
 
     def get_edge_thoughput(self):
@@ -120,6 +121,7 @@ class CPUMonitor(Node):
             if results.error:
                 self.get_logger().info(results.error)
                 self.edge_throughput_msg.data = "ERROR"
+                self.get_logger().info("iperf error")
             else:
                 sent_mb_s = str(results.MB_s)
                 lost_per = str(results.lost_percent)
@@ -133,6 +135,9 @@ class CPUMonitor(Node):
                 throughput += f"dur: {results.duration}s\n"
                 throughput += f"jit: {results.jitter_ms}ms\n"
                 self.edge_throughput_msg.data = throughput
+                self.get_logger().info("iperf results:")
+                self.get_logger().info(throughput)
+
         self.iperf = None
 
     def publish_cpu_stats(self):
