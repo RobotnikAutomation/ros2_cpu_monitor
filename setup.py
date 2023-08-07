@@ -22,7 +22,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'cpu_monitor = cpu_monitor.cpu_monitor:main'
+            'cpu_monitor = cpu_monitor.cpu_monitor:main',
+            'network_monitor = cpu_monitor.network_monitor:main',
         ],
     },
 )
