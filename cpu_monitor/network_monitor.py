@@ -1,8 +1,6 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
-from os.path import exists
-import psutil
 from ping3 import ping
 import iperf3
 
