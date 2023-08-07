@@ -4,8 +4,6 @@ from sensor_msgs.msg import Temperature
 from std_msgs.msg import String
 from os.path import exists
 import psutil
-from ping3 import ping
-import iperf3
 
 
 class CPUMonitor(Node):
@@ -19,8 +17,10 @@ class CPUMonitor(Node):
         self.init_parameters()
         self.init_publishers()
         self.init_vars()
-        # self.__setup_iperf()
-        self.timer = self.create_timer(1, self.publish_cpu_stats)
+        self.timer = self.create_timer(
+            timer_period_sec=self.publish_rate,
+            callback=self.publish_cpu_stats
+        )
 
     def init_parameters(self):
         self.cpu_id = "x86_pkg_temp"
@@ -28,18 +28,9 @@ class CPUMonitor(Node):
         #     "cpu_type_id"
         # ).get_parameter_value().string_value
         self.publish_rate = 1.0
-        self.edge_ip = '10.10.10.212'
-        self.iperf_port = 5201
         # self.publish_rate = self.get_parameter(
         #     "publish_rate",
         # ).get_parameter_value().double_value
-
-    def __setup_iperf(self):
-        self.iperf.duration = 1
-        self.iperf.server_hostname = self.edge_ip
-        self.iperf.port = self.iperf_port
-        self.iperf.protocol = 'udp'
-        self.iperf.zerocopy = True
 
     def init_publishers(self):
         self.cpu_temp_output_topic = "cpu_temperature"
@@ -59,22 +50,10 @@ class CPUMonitor(Node):
             self.cpu_load_output_topic,
             10
         )
-        self.edge_latency_publisher = self.create_publisher(
-            String,
-            self.edge_latency_topic,
-            10
-        )
-        self.edge_throughput_publisher = self.create_publisher(
-            String,
-            self.iperf_mbps_topic,
-            10
-        )
 
     def init_vars(self):
         self.cpu_temp_msg = Temperature()
         self.cpu_load_msg = String()
-        self.edge_latency_msg = String()
-        self.edge_throughput_msg = String()
         self.cpu_temp_msg.header.frame_id = "CPU"
         self.cpu_zone = self.find_cpu_zone()
 
@@ -105,50 +84,11 @@ class CPUMonitor(Node):
         self.get_logger().info(f"cpu load: {cpu_load}")
         self.cpu_load_msg.data = str(cpu_load)
 
-    def get_edge_latency(self):
-        edge_latency = ping(self.edge_ip, unit='ms', timeout=0.800)
-        self.get_logger().info(f"edge edge_latency: {edge_latency}")
-        self.edge_latency_msg.data = str(edge_latency)
-
-    def get_edge_thoughput(self):
-        self.iperf = iperf3.Client()
-        self.__setup_iperf()
-        try:
-            results = self.iperf.run()
-        except OSError as bad:
-            self.get_logger().info(bad)
-        finally:
-            if results.error:
-                self.get_logger().info(results.error)
-                self.edge_throughput_msg.data = "ERROR"
-                self.get_logger().info("iperf error")
-            else:
-                sent_mb_s = str(results.MB_s)
-                lost_per = str(results.lost_percent)
-                server = str(results.remote_host)
-                throughput = ""
-                throughput += f"thrp: {sent_mb_s}MB/s\n"
-                throughput += f"lost: {lost_per}%\n"
-                throughput += f"pkgs:  {results.packets}\n"
-                throughput += f"srv:  {server}\n"
-                throughput += f"prot: {results.protocol}\n"
-                throughput += f"dur: {results.duration}s\n"
-                throughput += f"jit: {results.jitter_ms}ms\n"
-                self.edge_throughput_msg.data = throughput
-                self.get_logger().info("iperf results:")
-                self.get_logger().info(throughput)
-
-        self.iperf = None
-
     def publish_cpu_stats(self):
         self.get_cpu_temperature()
         self.get_cpu_load()
-        self.get_edge_latency()
-        self.get_edge_thoughput()
         self.cpu_temp_publisher.publish(self.cpu_temp_msg)
         self.cpu_load_publisher.publish(self.cpu_load_msg)
-        self.edge_latency_publisher.publish(self.edge_latency_msg)
-        self.edge_throughput_publisher.publish(self.edge_throughput_msg)
 
 
 def main(
