@@ -70,6 +70,10 @@ class NetworkMonitor(Node):
         try:
             self.influxdb.ping()
             status = True
+            self.influxdb_health = True
+            self.get_logger().info(
+                "influxdb connected"
+            )
         except Exception as e:
             self.get_logger().error(
                 f"Influxdb Connection failure: {e}!"
@@ -115,6 +119,9 @@ class NetworkMonitor(Node):
             return False
         if not self.influxdb_health:
             return False
+            self.get_logger().warning(
+                f"could not get latency from ${self.edge_ip}"
+            )
         data = {
             "measurement": "latency",
             "tags": {
