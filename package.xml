@@ -10,6 +10,10 @@
 
   <depend>rclpy</depend>
   <depend>sensor_msgs</depend>
+  <exec_depend>python3-influxdb</exec_depend>
+  <build_depend>python3-influxdb</build_depend>
+  <exec_depend>iperf3</exec_depend>
+  <build_depend>iperf3</build_depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

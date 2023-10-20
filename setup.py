@@ -24,6 +24,8 @@ setup(
         'console_scripts': [
             'cpu_monitor = cpu_monitor.cpu_monitor:main',
             'network_monitor = cpu_monitor.network_monitor:main',
+            'latency_monitor = cpu_monitor.network_monitor:latency',
+            'throughput_monitor = cpu_monitor.network_monitor:throughput',
         ],
     },
 )
