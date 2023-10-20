@@ -106,10 +106,15 @@ class NetworkMonitor(Node):
             timeout=timeout,
             ttl=5,
         )
-        self.get_logger().info(f"edge edge_latency: {edge_latency}")
+        self.get_logger().info(f"edge latency: {edge_latency}")
         self.edge_latency_msg.data = str(edge_latency)
+        if not edge_latency:
+            self.get_logger().warning(
+                f"could not get latency from ${self.edge_ip}"
+            )
+            return False
         if not self.influxdb_health:
-            pass
+            return False
         data = {
             "measurement": "latency",
             "tags": {
@@ -131,6 +136,7 @@ class NetworkMonitor(Node):
             self.get_logger().error(
                 f"Error writing latency data to InfluxDB: {e}"
             )
+        return True
 
     def __parse_tcp(self, results):
         server = str(results.remote_host)
