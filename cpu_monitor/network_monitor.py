@@ -52,6 +52,8 @@ class NetworkMonitor(Node):
         self.iperf.port = self.iperf_port
         self.iperf.protocol = 'udp'
         self.iperf.zerocopy = True
+        self.iperf.num_streams = 1
+        #self.iperf.blksize = 1024
 
     def __setup_influxdb(self):
         self.influxdb = InfluxDBClient(
@@ -117,7 +119,7 @@ class NetworkMonitor(Node):
             },
             "time": now,
             "fields": {
-                "latency": edge_latency,
+                "latency": float(edge_latency),
             }
         }
         json_payload = []
@@ -186,10 +188,10 @@ class NetworkMonitor(Node):
             },
             "time": results.time,
             "fields": {
-                "throughput": results.sent_MB_s,
-                "throughput-upload": results.sent_MB_s,
-                "throughput-download": results.received_MB_s,
-                "retransmits": results.retransmits,
+                "throughput": float(results.sent_MB_s),
+                "throughput-upload": float(results.sent_MB_s),
+                "throughput-download": float(results.received_MB_s),
+                "retransmits": float(results.retransmits),
             }
         }
         return data
@@ -208,8 +210,8 @@ class NetworkMonitor(Node):
             },
             "time": results.time,
             "fields": {
-                "throughput": results.MB_s,
-                "lost_percent": results.lost_percent
+                "throughput": float(results.MB_s),
+                "lost_percent": float(results.lost_percent)
             }
         }
         return data
