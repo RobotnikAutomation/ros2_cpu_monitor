@@ -50,9 +50,9 @@ class NetworkMonitor(Node):
         self.iperf.duration = 1
         self.iperf.server_hostname = self.edge_ip
         self.iperf.port = self.iperf_port
-        self.iperf.protocol = 'udp'
+        self.iperf.protocol = 'tcp'
         self.iperf.zerocopy = True
-        self.iperf.num_streams = 1
+        #self.iperf.num_streams = 1
         #self.iperf.blksize = 1024
 
     def __setup_influxdb(self):
@@ -287,7 +287,7 @@ def throughput(
 ):
     rclpy.init(args=args)
     tracker = NetworkMonitor(
-        node_name="latency_monitor",
+        node_name="throughput_monitor",
         latency=False,
         throughput=True,
     )
