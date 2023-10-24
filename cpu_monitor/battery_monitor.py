@@ -6,6 +6,7 @@ from robotnik_msgs.msg import BatteryStatus
 from influxdb import InfluxDBClient
 import time
 import sys
+import os
 
 
 class BatteryMonitor(Node):
@@ -27,6 +28,11 @@ class BatteryMonitor(Node):
         self.influxdb_user = 'admin'
         self.influxdb_pass = 'admin'
         self.influxdb_db_name = 'openwrt'
+        self.influxdb_host = os.getenv("INFLUXDB_HOST", 'localhost')
+        self.influxdb_port = int(os.getenv("INFLUXDB_PORT", 8086))
+        self.influxdb_user = os.getenv("INFLUXDB_USER", 'admin')
+        self.influxdb_pass = os.getenv("INFLUXDB_PASS", 'admin')
+        self.influxdb_db_name = os.getenv("INFLUXDB_DB_NAME", 'openwrt')
         self.influxdb = None
         self.influxdb_health = False
 

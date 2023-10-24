@@ -8,6 +8,7 @@ from influxdb import InfluxDBClient
 import time
 import statistics
 import sys
+import os
 
 
 class CPUMonitor(Node):
