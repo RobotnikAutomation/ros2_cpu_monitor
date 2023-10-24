@@ -6,6 +6,7 @@ from std_msgs.msg import String
 from ping3 import ping
 import iperf3
 from influxdb import InfluxDBClient
+import os
 
 
 class NetworkMonitor(Node):
@@ -34,8 +35,8 @@ class NetworkMonitor(Node):
 
     def init_parameters(self):
         self.publish_rate = 1.0
-        self.edge_ip = '10.10.10.212'
-        self.iperf_port = 5201
+        self.edge_ip = os.getenv("EDGE_IP", "10.10.10.212")
+        self.iperf_port = os.getenv("IPERF3_PORT", 5201)
         self.influxdb_host = 'localhost'
         self.influxdb_port = 8086
         self.influxdb_user = 'admin'
