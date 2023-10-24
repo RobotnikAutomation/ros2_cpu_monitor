@@ -1,0 +1,6 @@
+iperf3
+python3-influxdb
+python3-pip
+ros-${ROS_DISTRO}-rosbag2
+ros-${ROS_DISTRO}-rosbag2-storage-mcap
+ros-${ROS_DISTRO}-std-msgs
