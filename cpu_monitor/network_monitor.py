@@ -34,9 +34,8 @@ class NetworkMonitor(Node):
         )
 
     def init_parameters(self):
-        self.publish_rate = 1.0
+        self.publish_rate = float(os.getenv("PUBLISH_RATE", 1.0))
         self.edge_ip = os.getenv("EDGE_IP", "10.10.10.212")
-        self.iperf_port = os.getenv("IPERF3_PORT", 5201)
         self.iperf_port = int(os.getenv("IPERF3_PORT", 5201))
         self.influxdb_host = os.getenv("INFLUXDB_HOST", 'localhost')
         self.influxdb_port = int(os.getenv("INFLUXDB_PORT", 8086))

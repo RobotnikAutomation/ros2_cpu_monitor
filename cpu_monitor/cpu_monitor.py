@@ -32,7 +32,7 @@ class CPUMonitor(Node):
         # self.cpu_id = self.get_parameter(
         #     "cpu_type_id"
         # ).get_parameter_value().string_value
-        self.publish_rate = 1.0
+        self.publish_rate = float(os.getenv("PUBLISH_RATE", 1.0))
         # self.publish_rate = self.get_parameter(
         #     "publish_rate",
         # ).get_parameter_value().double_value

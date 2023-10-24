@@ -19,6 +19,10 @@ class BatteryMonitor(Node):
         self.__setup_influxdb()
 
     def init_parameters(self):
+        self.battery_topic = os.getenv(
+            "BATTERY_TOPIC",
+            "/robot/battery_estimator/data"
+        )
         self.influxdb_host = os.getenv("INFLUXDB_HOST", 'localhost')
         self.influxdb_port = int(os.getenv("INFLUXDB_PORT", 8086))
         self.influxdb_user = os.getenv("INFLUXDB_USER", 'admin')
@@ -28,7 +32,6 @@ class BatteryMonitor(Node):
         self.influxdb_health = False
 
     def init_suscribers(self):
-        self.battery_topic = "/robot/battery_estimator/data"
         self.subscription = self.create_subscription(
             BatteryStatus,
             self.battery_topic,
