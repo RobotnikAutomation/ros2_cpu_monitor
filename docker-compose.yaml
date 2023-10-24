@@ -3,13 +3,6 @@ name: "monitor"
 services:
   workspace:
     image: robotnik/monitor:humble-devel
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        base_image: robotnik/ros
-        ros_distro: humble
-        image_version: 0.4.0
     environment:
       ROS_DOMAIN_ID: 0
       ROS_BU_LAUNCH: "cpu_monitor"
@@ -27,4 +20,3 @@ services:
       PUBLISH_RATE: "1.0"
       BATTERY_TOPIC: "/robot/battery_estimator/data"
     network_mode: host
-
