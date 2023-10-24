@@ -1,7 +1,7 @@
 ---
-name: "monitor"
+name: "builder"
 services:
-  workspace:
+  monitor:
     image: robotnik/monitor:humble-devel
     build:
       context: .
