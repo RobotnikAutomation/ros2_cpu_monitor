@@ -26,6 +26,7 @@ setup(
             'network_monitor = cpu_monitor.network_monitor:main',
             'latency_monitor = cpu_monitor.network_monitor:latency',
             'throughput_monitor = cpu_monitor.network_monitor:throughput',
+            'battery_monitor = cpu_monitor.battery_monitor:main',
         ],
     },
 )
