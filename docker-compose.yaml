@@ -1,15 +1,37 @@
 ---
 name: "monitor"
 services:
-  workspace:
+  cpu:
     image: robotnik/monitor:humble-devel
     environment:
       ROS_DOMAIN_ID: 0
       ROS_BU_LAUNCH: "cpu_monitor"
-      # ROS_BU_LAUNCH: "network_monitor"
-      # ROS_BU_LAUNCH: "latency_monitor"
-      # ROS_BU_LAUNCH: "throughput_monitor"
-      # ROS_BU_LAUNCH: "battery_monitor"
+      INFLUXDB_HOST: "localhost"
+      INFLUXDB_PORT: "8086"
+      INFLUXDB_USER: "admin"
+      INFLUXDB_PASS: "admin"
+      INFLUXDB_DB_NAME: "openwrt"
+      PUBLISH_RATE: "1.0"
+    network_mode: host
+  latency:
+    image: robotnik/monitor:humble-devel
+    environment:
+      ROS_DOMAIN_ID: 0
+      ROS_BU_LAUNCH: "latency_monitor"
+      EDGE_IP: "192.168.2.103"
+      INFLUXDB_HOST: "localhost"
+      INFLUXDB_PORT: "8086"
+      INFLUXDB_USER: "admin"
+      INFLUXDB_PASS: "admin"
+      INFLUXDB_DB_NAME: "openwrt"
+      PUBLISH_RATE: "1.0"
+      BATTERY_TOPIC: "/robot/battery_estimator/data"
+    network_mode: host
+  throughput:
+    image: robotnik/monitor:humble-devel
+    environment:
+      ROS_DOMAIN_ID: 0
+      ROS_BU_LAUNCH: "throughput_monitor"
       EDGE_IP: "192.168.2.103"
       IPERF3_PORT: "5201"
       INFLUXDB_HOST: "localhost"
@@ -18,5 +40,16 @@ services:
       INFLUXDB_PASS: "admin"
       INFLUXDB_DB_NAME: "openwrt"
       PUBLISH_RATE: "1.0"
+    network_mode: host
+  battery:
+    image: robotnik/monitor:humble-devel
+    environment:
+      ROS_DOMAIN_ID: 0
+      ROS_BU_LAUNCH: "battery_monitor"
+      INFLUXDB_HOST: "localhost"
+      INFLUXDB_PORT: "8086"
+      INFLUXDB_USER: "admin"
+      INFLUXDB_PASS: "admin"
+      INFLUXDB_DB_NAME: "openwrt"
       BATTERY_TOPIC: "/robot/battery_estimator/data"
     network_mode: host
